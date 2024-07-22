@@ -27,11 +27,13 @@ const VerifyAccount = () => {
 
     const onSubmit = async (data: FormData) => {
         try {
+
             const response = await axios.post(`/api/verify-code`, {
                 username: param.username,
                 code: data.code,
             });
 
+            console.log(response);
             toast({
                 title: "Success",
                 description: response.data.message,

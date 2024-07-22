@@ -1,24 +1,18 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useDebounceCallback } from 'usehooks-ts';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import axios, { AxiosError } from 'axios';
-import { ApiResponse } from '@/types/ApiResponse';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form';
+import { signIn } from 'next-auth/react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import Link from 'next/link';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { signInSchema } from '@/schemas/signInSchema';
-import { signIn } from 'next-auth/react';
 
 const LoginPage = () => {
-
   const { toast } = useToast();
   const router = useRouter();
 
@@ -30,25 +24,25 @@ const LoginPage = () => {
     }
   });
 
-
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-
     const result = await signIn('credentials', {
       redirect: false,
       identifier: data.identifier,
       password: data.password,
-    })
-
-    if(result?.error) {
+    });
+  
+    console.log("Sign-in result:", result); // Debugging
+  
+    if (result?.error) {
       toast({
         title: 'An error occurred',
         description: result.error,
         variant: 'destructive'
-      })
+      });
     } 
-
-    if(result?.url) {
-      router.replace('/dashboard')
+  
+    if (result?.ok) {
+      router.replace('/dashboard');
     }
   };
 
