@@ -1,33 +1,31 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-export { default } from "next-auth/middleware";
-import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+export { default } from 'next-auth/middleware';
 
-// This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
-    const token = await getToken({ req: request });
-    const url = request.nextUrl;
-
-    // If user is authenticated and trying to access auth pages, redirect to dashboard
-    if (token && (url.pathname.startsWith('/signIn') || url.pathname.startsWith('/signUp') || url.pathname.startsWith('/verify'))) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-
-    // If user is not authenticated and trying to access protected routes, redirect to signIn
-    if (!token && url.pathname.startsWith('/dashboard')) {
-        return NextResponse.redirect(new URL('/signIn', request.url));
-    }
-
-    // Allow the request to continue if no redirect is needed
-    return NextResponse.next();
-}
-
-// See "Matching Paths" below to learn more
 export const config = {
-    matcher: [
-        '/signIn',
-        '/signUp',
-        '/verify/:path*',
-        '/dashboard/:path*',
-    ]
+  matcher: ['/dashboard/:path*', '/sign-in', '/sign-up', '/', '/verify/:path*'],
 };
+
+export async function middleware(request: NextRequest) {
+  const token = await getToken({ req: request });
+  const url = request.nextUrl;
+
+  // Redirect to dashboard if the user is already authenticated
+  // and trying to access sign-in, sign-up, or home page
+  if (
+    token &&
+    (url.pathname.startsWith('/sign-in') ||
+      url.pathname.startsWith('/sign-up') ||
+      url.pathname.startsWith('/verify') ||
+      url.pathname.startsWith('/signIn') ||
+      url.pathname === '/')
+  ) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  if (!token && url.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
+  }
+
+  return NextResponse.next();
+}

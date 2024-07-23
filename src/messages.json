@@ -1,17 +1,17 @@
 [
     {
-        "title": "Message from User123",
-        "content":"Hey, how are you doing today?",
-        "recieved": "10 mins ago"
+      "title": "Message from User123",
+      "content": "Hey, how are you doing today?",
+      "received": "10 minutes ago"
     },
     {
-        "title": "Message from some guy",
-        "content":"Hey, how are you doing today?",
-        "recieved": "15 mins ago"
+      "title": "Message from SecretAdmirer",
+      "content": "I really liked your recent post!",
+      "received": "2 hours ago"
     },
     {
-        "title": "Message from mom",
-        "content":"Come down for Dinner",
-        "recieved": "2 hours ago"
+      "title": "Message from MysteryGuest",
+      "content": "Do you have any book recommendations?",
+      "received": "1 day ago"
     }
-]
+  ]

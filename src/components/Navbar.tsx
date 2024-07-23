@@ -1,39 +1,47 @@
-"use client"
+'use client';
 
-import React from "react"
-import Link from "next/link"
-import { useSession, signOut } from "next-auth/react"
-import { User } from "next-auth"
-import { Button } from "./ui/button"
+import React from 'react';
+import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
+import { Button } from './ui/button';
+import { User } from 'next-auth';
 
-const Navbar = () => {
-    const { data: session } = useSession();
-    const user: User = session?.user as User;
+function Navbar() {
+  const { data: session } = useSession();
+  const user: User | undefined = session?.user;
 
-    return (
-        <nav className="p-4 md:p-6 shadow-md">
-            <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-                <a className="text-xl font-bold mb-4 md:mb-0" href="/dashboard">Mystery Message</a>
-                {
-                    session ? (
-                        <>
-                            <span className="mr-4">Welcome, {user?.username || user?.email}</span>
-                            <Button className="w-full md:w-auto" onClick={() => signOut()}>Log Out</Button>
-                        </>
-                    ) : (
-                        <div className="flex space-x-4">
-                            <Link href='/signIn'>
-                                <Button className="w-full md:w-auto">Log In</Button>
-                            </Link>
-                            <Link href='/signUp'>
-                                <Button className="w-full md:w-auto">Sign Up</Button>
-                            </Link>
-                        </div>
-                    )
-                }
-            </div>
-        </nav>
-    )
+  return (
+    <nav className="p-4 md:p-6 shadow-md bg-blue-500 text-white">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <a href="#" className="text-xl font-bold mb-4 md:mb-0">
+          ANON FEEDBACK
+        </a>
+        {session ? (
+          <>
+            <span className="mr-4">
+              Welcome, {user?.username || user?.email}
+            </span>
+            <Button onClick={() => signOut()} className="w-full md:w-auto bg-slate-100 text-black" variant='outline'>
+              Logout
+            </Button>
+          </>
+        ) : (
+          <div className="flex flex-col md:flex-row">
+            <Link href="/sign-in">
+              <Button className="w-full md:w-auto bg-slate-100 text-black mb-2 md:mb-0 md:mr-2" variant='outline'>
+                Login
+              </Button>
+            </Link>
+            <Link href="/sign-up">
+              <Button className="w-full md:w-auto bg-slate-100 text-black" variant='outline'>
+                Sign Up
+              </Button>
+            </Link>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
 }
 
 export default Navbar;

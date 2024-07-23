@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     let verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
 
     if (existingUserByEmail) {
-      if (existingUserByEmail.isverified) {
+      if (existingUserByEmail.isVerified) {
         return NextResponse.json(
           {
             success: false,
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
         const hashedPassword = await bcrypt.hash(password, 10);
         existingUserByEmail.password = hashedPassword;
         existingUserByEmail.verifyCode = verifyCode;
-        existingUserByEmail.verifycodeExpire = new Date(Date.now() + 3600000);
+        existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 3600000);
         await existingUserByEmail.save();
       }
     } else {
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         email,
         password: hashedPassword,
         verifyCode,
-        verifycodeExpire: expiryDate,
+        verifyCodeExpiry: expiryDate,
         isVerified: false,
         isAcceptingMessages: true,
         messages: [],
@@ -64,7 +64,11 @@ export async function POST(request: Request) {
     }
 
     // Send verification email
-    const emailResponse = await sendVerificationEmail(email, username, verifyCode);
+    const emailResponse = await sendVerificationEmail(
+      email,
+      username,
+      verifyCode
+    );
     if (!emailResponse.success) {
       return NextResponse.json(
         {
